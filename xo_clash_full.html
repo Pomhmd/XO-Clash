@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional XO Clash Game</title>
+    <style>
+/* ===== CSS RESET AND BASE STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Color palette */
+    --primary-color: #667eea;
+    --primary-dark: #5a67d8;
+    --secondary-color: #764ba2;
+    --accent-color: #f093fb;
+    --success-color: #48bb78;
+    --warning-color: #ed8936;
+    --error-color: #f56565;
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --text-light: #a0aec0;
+    --bg-white: #ffffff;
+    --bg-light: #f7fafc;
+    --bg-overlay: rgba(255, 255, 255, 0.95);
+    --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --border-radius: 12px;
+    --border-radius-lg: 20px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+    
+    /* Professional animated gradient background */
+    background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+}
+
+/* Animated background gradient */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Background overlay for better content readability */
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    z-index: -1;
+}
+
+/* ===== MAIN GAME CONTAINER ===== */
+.game-container {
+    background: var(--bg-overlay);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-heavy);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    transform: translateY(0);
+    transition: var(--transition);
+    animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.game-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== HEADER STYLES ===== */
+.game-header {
+    margin-bottom: 2rem;
+}
+
+.game-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    from { filter: brightness(1); }
+    to { filter: brightness(1.1); }
+}
+
+.game-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* ===== GAME CONTROLS ===== */
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+}
+
+.player-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.control-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.player-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: var(--border-radius);
+    background: var(--bg-white);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    min-width: 150px;
+}
+
+.player-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.player-select:hover {
+    border-color: var(--primary-color);
+}
+
+/* ===== BUTTON STYLES ===== */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    box-shadow: var(--shadow-medium);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--bg-white);
+    color: var(--text-primary);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    box-shadow: var(--shadow-light);
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-medium);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* ===== SCORE BOARD ===== */
+.score-board {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-light);
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.score-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.score-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    animation: scoreUpdate 0.3s ease-out;
+}
+
+@keyframes scoreUpdate {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.score-divider {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-light);
+    padding: 0 1rem;
+}
+
+/* ===== GAME STATUS ===== */
+.game-status {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.game-status.winner {
+    background: rgba(72, 187, 120, 0.1);
+    color: var(--success-color);
+    animation: statusPulse 0.6s ease-in-out;
+}
+
+.game-status.draw {
+    background: rgba(237, 137, 54, 0.1);
+    color: var(--warning-color);
+}
+
+@keyframes statusPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ===== GAME BOARD ===== */
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin: 2rem auto;
+    max-width: 300px;
+    aspect-ratio: 1;
+}
+
+.cell {
+    aspect-ratio: 1;
+    background: var(--bg-white);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.cell:hover::before {
+    opacity: 0.1;
+}
+
+.cell:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.cell:active {
+    transform: translateY(0);
+}
+
+.cell.filled {
+    cursor: not-allowed;
+    animation: cellFill 0.3s ease-out;
+}
+
+@keyframes cellFill {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.cell.winner {
+    background: linear-gradient(135deg, var(--success-color), #38a169);
+    color: white;
+    border-color: var(--success-color);
+    animation: winnerCell 0.6s ease-in-out;
+}
+
+@keyframes winnerCell {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.cell.x {
+    color: var(--primary-color);
+}
+
+.cell.o {
+    color: var(--secondary-color);
+}
+
+/* ===== ACTION BUTTONS ===== */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+/* ===== MODAL STYLES ===== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--bg-white);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow-heavy);
+    animation: modalSlideIn 0.3s ease-out;
+    position: relative;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    margin-bottom: 1.5rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.modal-body {
+    margin-bottom: 2rem;
+}
+
+.modal-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: iconBounce 0.6s ease-in-out;
+}
+
+@keyframes iconBounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.modal-message {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet styles */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .game-title {
+        font-size: 2rem;
+    }
+    
+    .game-board {
+        max-width: 280px;
+        gap: 0.5rem;
+    }
+    
+    .cell {
+        font-size: 1.8rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .game-container {
+        padding: 1rem;
+    }
+    
+    .game-title {
+        font-size: 1.75rem;
+    }
+    
+    .game-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .game-board {
+        max-width: 250px;
+        gap: 0.4rem;
+    }
+    
+    .cell {
+        font-size: 1.5rem;
+    }
+    
+    .score-board {
+        padding: 0.75rem;
+    }
+    
+    .score-value {
+        font-size: 1.25rem;
+    }
+    
+    .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .modal-icon {
+        font-size: 3rem;
+    }
+}
+
+/* Extra small mobile */
+@media (max-width: 320px) {
+    .game-title {
+        font-size: 1.5rem;
+    }
+    
+    .game-board {
+        max-width: 220px;
+    }
+    
+    .cell {
+        font-size: 1.25rem;
+    }
+}
+
+/* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus styles for keyboard navigation */
+.btn:focus,
+.player-select:focus,
+.cell:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #0000ff;
+        --secondary-color: #800080;
+        --text-primary: #000000;
+        --bg-white: #ffffff;
+    }
+}
+
+
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background overlay for visual depth -->
+    <div class="background-overlay"></div>
+    
+    <!-- Main game container -->
+    <div class="game-container">
+        <!-- Header section -->
+        <header class="game-header">
+            <h1 class="game-title">XO Clash</h1>
+            <p class="game-subtitle">Challenge yourself in this classic strategy game</p>
+        </header>
+
+        <!-- Game controls -->
+        <div class="game-controls">
+            <div class="player-selection">
+                <label for="playerChoice" class="control-label">Choose your symbol:</label>
+                <select id="playerChoice" class="player-select">
+                    <option value="X">X (Cross)</option>
+                    <option value="O">O (Circle)</option>
+                </select>
+            </div>
+            <button id="startBtn" class="btn btn-primary">Start Game</button>
+        </div>
+
+        <!-- Score board -->
+        <div class="score-board">
+            <div class="score-item">
+                <span class="score-label">Player X</span>
+                <span id="scoreX" class="score-value">0</span>
+            </div>
+            <div class="score-divider">vs</div>
+            <div class="score-item">
+                <span class="score-label">Player O</span>
+                <span id="scoreO" class="score-value">0</span>
+            </div>
+        </div>
+
+        <!-- Game status -->
+        <div id="status" class="game-status">Choose your symbol to start playing</div>
+
+        <!-- Game board -->
+        <div id="board" class="game-board">
+            <!-- Cells will be dynamically generated -->
+        </div>
+
+        <!-- Action buttons -->
+        <div class="action-buttons">
+            <button id="resetBtn" class="btn btn-secondary">Reset Game</button>
+            <button id="newGameBtn" class="btn btn-outline">New Round</button>
+        </div>
+    </div>
+
+    <!-- Winner Modal -->
+    <div id="winnerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">Game Over</h2>
+            </div>
+            <div class="modal-body">
+                <div id="modalIcon" class="modal-icon">🎉</div>
+                <p id="modalMessage" class="modal-message">Congratulations!</p>
+            </div>
+            <div class="modal-footer">
+                <button id="playAgainBtn" class="btn btn-primary">Play Again</button>
+                <button id="closeModalBtn" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading JavaScript -->
+    <script>
+/**
+ * Professional Tic Tac Toe Game
+ * A modern, responsive implementation with clean architecture
+ */
+
+class TicTacToeGame {
+    constructor() {
+        // Game state
+        this.cells = Array(9).fill('');
+        this.currentPlayer = 'X';
+        this.playerSymbol = 'X';
+        this.gameActive = false;
+        this.scores = { X: 0, O: 0 };
+        
+        // DOM elements
+        this.elements = {
+            board: document.getElementById('board'),
+            status: document.getElementById('status'),
+            scoreX: document.getElementById('scoreX'),
+            scoreO: document.getElementById('scoreO'),
+            playerChoice: document.getElementById('playerChoice'),
+            startBtn: document.getElementById('startBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            newGameBtn: document.getElementById('newGameBtn'),
+            modal: document.getElementById('winnerModal'),
+            modalTitle: document.getElementById('modalTitle'),
+            modalIcon: document.getElementById('modalIcon'),
+            modalMessage: document.getElementById('modalMessage'),
+            playAgainBtn: document.getElementById('playAgainBtn'),
+            closeModalBtn: document.getElementById('closeModalBtn')
+        };
+        
+        // Winning combinations
+        this.winningCombinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6]             // Diagonals
+        ];
+        
+        this.init();
+    }
+    
+    /**
+     * Initialize the game and set up event listeners
+     */
+    init() {
+        this.setupEventListeners();
+        this.renderBoard();
+        this.updateStatus('Choose your symbol to start playing');
+    }
+    
+    /**
+     * Set up all event listeners
+     */
+    setupEventListeners() {
+        // Game control buttons
+        this.elements.startBtn.addEventListener('click', () => this.startGame());
+        this.elements.resetBtn.addEventListener('click', () => this.resetGame());
+        this.elements.newGameBtn.addEventListener('click', () => this.newRound());
+        
+        // Modal buttons
+        this.elements.playAgainBtn.addEventListener('click', () => this.playAgain());
+        this.elements.closeModalBtn.addEventListener('click', () => this.closeModal());
+        
+        // Close modal when clicking outside
+        this.elements.modal.addEventListener('click', (e) => {
+            if (e.target === this.elements.modal) {
+                this.closeModal();
+            }
+        });
+        
+        // Keyboard support for modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.elements.modal.classList.contains('show')) {
+                this.closeModal();
+            }
+        });
+    }
+    
+    /**
+     * Render the game board
+     */
+    renderBoard() {
+        this.elements.board.innerHTML = '';
+        
+        this.cells.forEach((cell, index) => {
+            const cellElement = document.createElement('div');
+            cellElement.classList.add('cell');
+            cellElement.textContent = cell;
+            cellElement.setAttribute('data-index', index);
+            cellElement.setAttribute('tabindex', '0');
+            
+            // Add symbol-specific class for styling
+            if (cell) {
+                cellElement.classList.add('filled');
+                cellElement.classList.add(cell.toLowerCase());
+            }
+            
+            // Add click event listener
+            cellElement.addEventListener('click', () => this.handleCellClick(index));
+            
+            // Add keyboard support
+            cellElement.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.handleCellClick(index);
+                }
+            });
+            
+            this.elements.board.appendChild(cellElement);
+        });
+    }
+    
+    /**
+     * Start a new game
+     */
+    startGame() {
+        this.playerSymbol = this.elements.playerChoice.value;
+        this.currentPlayer = 'X';
+        this.gameActive = true;
+        this.cells = Array(9).fill('');
+        
+        this.updateStatus(`Player ${this.currentPlayer}'s turn`);
+        this.renderBoard();
+        
+        // Add visual feedback
+        this.elements.startBtn.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.elements.startBtn.style.transform = 'scale(1)';
+        }, 150);
+    }
+    
+    /**
+     * Handle cell click events
+     */
+    handleCellClick(index) {
+        // Validate move
+        if (this.cells[index] !== '' || !this.gameActive) {
+            return;
+        }
+        
+        // Make move
+        this.cells[index] = this.currentPlayer;
+        this.renderBoard();
+        
+        // Check for game end
+        const gameResult = this.checkGameEnd();
+        
+        if (gameResult) {
+            this.handleGameEnd(gameResult);
+        } else {
+            // Switch players
+            this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+            this.updateStatus(`Player ${this.currentPlayer}'s turn`);
+        }
+    }
+    
+    /**
+     * Check if the game has ended (win or draw)
+     */
+    checkGameEnd() {
+        // Check for winner
+        for (const combination of this.winningCombinations) {
+            const [a, b, c] = combination;
+            if (this.cells[a] && 
+                this.cells[a] === this.cells[b] && 
+                this.cells[a] === this.cells[c]) {
+                return {
+                    type: 'win',
+                    winner: this.cells[a],
+                    combination: combination
+                };
+            }
+        }
+        
+        // Check for draw
+        if (!this.cells.includes('')) {
+            return { type: 'draw' };
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Handle game end (win or draw)
+     */
+    handleGameEnd(result) {
+        this.gameActive = false;
+        
+        if (result.type === 'win') {
+            this.handleWin(result.winner, result.combination);
+        } else if (result.type === 'draw') {
+            this.handleDraw();
+        }
+        
+        // Show modal after a brief delay for better UX
+        setTimeout(() => {
+            this.showModal(result);
+        }, 800);
+    }
+    
+    /**
+     * Handle win scenario
+     */
+    handleWin(winner, combination) {
+        // Update score
+        this.scores[winner]++;
+        this.updateScoreDisplay();
+        
+        // Highlight winning cells
+        this.highlightWinningCells(combination);
+        
+        // Update status
+        this.updateStatus(`🎉 Player ${winner} wins!`, 'winner');
+    }
+    
+    /**
+     * Handle draw scenario
+     */
+    handleDraw() {
+        this.updateStatus('🤝 It\'s a draw!', 'draw');
+    }
+    
+    /**
+     * Highlight winning cells with animation
+     */
+    highlightWinningCells(combination) {
+        const cellElements = this.elements.board.querySelectorAll('.cell');
+        
+        combination.forEach((index, i) => {
+            setTimeout(() => {
+                cellElements[index].classList.add('winner');
+            }, i * 100);
+        });
+    }
+    
+    /**
+     * Update game status display
+     */
+    updateStatus(message, type = '') {
+        this.elements.status.textContent = message;
+        this.elements.status.className = `game-status ${type}`;
+    }
+    
+    /**
+     * Update score display with animation
+     */
+    updateScoreDisplay() {
+        this.elements.scoreX.textContent = this.scores.X;
+        this.elements.scoreO.textContent = this.scores.O;
+        
+        // Trigger score update animation
+        const scoreElement = this.currentPlayer === 'X' ? 
+            this.elements.scoreX : this.elements.scoreO;
+        
+        scoreElement.style.animation = 'none';
+        setTimeout(() => {
+            scoreElement.style.animation = 'scoreUpdate 0.3s ease-out';
+        }, 10);
+    }
+    
+    /**
+     * Show winner/draw modal
+     */
+    showModal(result) {
+        let title, icon, message;
+        
+        if (result.type === 'win') {
+            title = 'Congratulations!';
+            icon = '🎉';
+            message = `Player ${result.winner} wins this round!`;
+        } else {
+            title = 'Draw!';
+            icon = '🤝';
+            message = 'This round ended in a draw. Well played!';
+        }
+        
+        this.elements.modalTitle.textContent = title;
+        this.elements.modalIcon.textContent = icon;
+        this.elements.modalMessage.textContent = message;
+        
+        this.elements.modal.classList.add('show');
+        
+        // Focus management for accessibility
+        this.elements.playAgainBtn.focus();
+    }
+    
+    /**
+     * Close the modal
+     */
+    closeModal() {
+        this.elements.modal.classList.remove('show');
+    }
+    
+    /**
+     * Play again (new round)
+     */
+    playAgain() {
+        this.closeModal();
+        this.newRound();
+    }
+    
+    /**
+     * Start a new round (keep scores)
+     */
+    newRound() {
+        this.currentPlayer = 'X';
+        this.gameActive = true;
+        this.cells = Array(9).fill('');
+        
+        this.updateStatus(`Player ${this.currentPlayer}'s turn`);
+        this.renderBoard();
+    }
+    
+    /**
+     * Reset the entire game (clear scores)
+     */
+    resetGame() {
+        this.scores = { X: 0, O: 0 };
+        this.updateScoreDisplay();
+        this.gameActive = false;
+        this.cells = Array(9).fill('');
+        
+        this.updateStatus('Choose your symbol to start playing');
+        this.renderBoard();
+        this.closeModal();
+        
+        // Visual feedback
+        this.elements.resetBtn.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.elements.resetBtn.style.transform = 'scale(1)';
+        }, 150);
+    }
+    
+    /**
+     * Get current game statistics
+     */
+    getGameStats() {
+        const totalGames = this.scores.X + this.scores.O;
+        return {
+            totalGames,
+            playerXWins: this.scores.X,
+            playerOWins: this.scores.O,
+            draws: totalGames > 0 ? totalGames - this.scores.X - this.scores.O : 0
+        };
+    }
+}
+
+/**
+ * Utility functions for enhanced user experience
+ */
+class GameUtils {
+    /**
+     * Add smooth page load animation
+     */
+    static initPageAnimations() {
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameContainer = document.querySelector('.game-container');
+            gameContainer.style.opacity = '0';
+            gameContainer.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                gameContainer.style.transition = 'all 0.6s ease-out';
+                gameContainer.style.opacity = '1';
+                gameContainer.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    }
+    
+    /**
+     * Add touch support for mobile devices
+     */
+    static addTouchSupport() {
+        // Prevent zoom on double tap for iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (event) => {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // Add touch feedback
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.classList.contains('cell') || e.target.classList.contains('btn')) {
+                e.target.style.transform = 'scale(0.95)';
+            }
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            if (e.target.classList.contains('cell') || e.target.classList.contains('btn')) {
+                setTimeout(() => {
+                    e.target.style.transform = '';
+                }, 150);
+            }
+        });
+    }
+    
+    /**
+     * Add keyboard navigation support
+     */
+    static addKeyboardSupport() {
+        document.addEventListener('keydown', (e) => {
+            // Arrow key navigation for game board
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                const cells = document.querySelectorAll('.cell');
+                const focusedIndex = Array.from(cells).findIndex(cell => 
+                    cell === document.activeElement
+                );
+                
+                if (focusedIndex !== -1) {
+                    e.preventDefault();
+                    let newIndex = focusedIndex;
+                    
+                    switch (e.key) {
+                        case 'ArrowUp':
+                            newIndex = focusedIndex - 3;
+                            break;
+                        case 'ArrowDown':
+                            newIndex = focusedIndex + 3;
+                            break;
+                        case 'ArrowLeft':
+                            newIndex = focusedIndex - 1;
+                            break;
+                        case 'ArrowRight':
+                            newIndex = focusedIndex + 1;
+                            break;
+                    }
+                    
+                    if (newIndex >= 0 && newIndex < 9) {
+                        cells[newIndex].focus();
+                    }
+                }
+            }
+        });
+    }
+    
+    /**
+     * Add performance optimizations
+     */
+    static optimizePerformance() {
+        // Debounce resize events
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Trigger any resize-dependent calculations here
+                console.log('Window resized - game layout adjusted');
+            }, 250);
+        });
+    }
+}
+
+/**
+ * Game initialization and setup
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize the game
+    const game = new TicTacToeGame();
+    
+    // Initialize utility features
+    GameUtils.initPageAnimations();
+    GameUtils.addTouchSupport();
+    GameUtils.addKeyboardSupport();
+    GameUtils.optimizePerformance();
+    
+    // Make game instance globally accessible for debugging
+    window.ticTacToeGame = game;
+    
+    // Add console welcome message
+    console.log('🎮 Professional Tic Tac Toe Game Loaded');
+    console.log('Access game instance via: window.ticTacToeGame');
+});
+
+/**
+ * Service Worker registration for offline support (optional enhancement)
+ */
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // Note: Service worker file would need to be created separately
+        // navigator.serviceWorker.register('/sw.js')
+        //     .then(registration => console.log('SW registered'))
+        //     .catch(error => console.log('SW registration failed'));
+    });
+}
+
+/**
+ * Error handling and logging
+ */
+window.addEventListener('error', (e) => {
+    console.error('Game Error:', e.error);
+    // In production, you might want to send this to an error tracking service
+});
+
+/**
+ * Performance monitoring (optional)
+ */
+window.addEventListener('load', () => {
+    // Log performance metrics
+    if (window.performance && window.performance.timing) {
+        const loadTime = window.performance.timing.loadEventEnd - 
+                        window.performance.timing.navigationStart;
+        console.log(`Game loaded in ${loadTime}ms`);
+    }
+});
+
+
+</script>
+</body>
+</html>
+
